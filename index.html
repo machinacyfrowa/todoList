@@ -32,9 +32,17 @@
         function addTask() {
             let task = document.getElementById('task').value;
             let taskList = JSON.parse(window.localStorage.getItem('taskList'));
-            if (taskList === null) taskList = Array(); //zabezpieczenie na wypadek pustej listy  
-            taskList.push(task);
             //console.log(taskList);
+            //if (taskList.count() == 0) 
+            //    taskList = Array(); //zabezpieczenie na wypadek pustej listy  
+            try {
+                taskList.push(task);
+            } catch {
+                taskList = Array();
+                taskList.push(task);
+            }
+            
+
             window.localStorage.setItem('taskList', JSON.stringify(taskList));
             document.getElementById('task').value = "";
             showTaskList();
@@ -47,11 +55,21 @@
             let htmlBuffer = "";
             htmlBuffer += "<ul>";
             for (let i = 0; i < taskArray.length; i++) {
-                htmlBuffer += "<li>" + taskArray[i] + "</li>";
+                htmlBuffer += "<li><button onclick=\"removeTask("+i+")\">Usuń</button>" 
+                                + taskArray[i] + "</li>";
             }
             htmlBuffer += "</ul>";
             //console.log(htmlBuffer);
             taskList.innerHTML = htmlBuffer;
+        }
+        function removeTask(i) {
+            let taskArray = JSON.parse(window.localStorage.getItem('taskList'));
+            console.log(taskArray);
+            taskArray.splice(i, 1);
+            console.log(taskArray);
+
+            window.localStorage.setItem('taskList', JSON.stringify(taskArray));
+            showTaskList();
         }
     </script>
 </body>
